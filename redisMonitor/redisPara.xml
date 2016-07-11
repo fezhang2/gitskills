@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<template-parameter-def>
+	<zone-template>
+		<zoneField1 desc="The Redis host" type="text" name="host" > </zoneField1>
+		<zoneField2 desc="The redis password" type="password" name="Redis Password"> </zoneField2>
+	</zone-template>
+	<server-template>
+			
+	</server-template>
+	<about-server>developer: fezhang2@cisco.com	</about-server>	
+</template-parameter-def>
