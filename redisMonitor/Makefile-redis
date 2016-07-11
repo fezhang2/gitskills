@@ -1,0 +1,41 @@
+P_ROOT = $(TOPDIR)
+#include $(P_ROOT)/Makefile.env.common
+P_BINDIR    = $(P_ROOT)/bin
+
+PKG_DIR = Identity
+PKG_NAME = WBXCIpluginctrl
+INST_PATH = /opt/webex/mct/plugin/CI/$(PKG_DIR)
+
+all:clean rpm
+	
+rpm: COMMONPKG MAKERPM
+
+clean: remvpkgdir
+	rm -f *.o all a.out core.* $(PKG_NAME)-$(version)-$(release)-*.rpm
+
+COMMONPKG : makepkgdir
+	(cp -f $(P_ROOT)/bin/redis.sh	$(P_BINDIR)/$(PKG_DIR)/bin/)
+	(cp -f $(P_ROOT)/bin/setup_redis.sh $(P_BINDIR)/$(PKG_DIR)/bin/setup.sh)
+	(cp -f $(P_ROOT)/conf/db-zone-server-template-init.cfg $(P_BINDIR)/$(PKG_DIR)/)
+	(cp -f $(P_ROOT)/conf/redisPara.xml $(P_BINDIR)/$(PKG_DIR)/)
+
+	(chmod 750 $(P_BINDIR)/$(PKG_DIR)/bin/redis.sh)
+	(chmod 750 $(P_BINDIR)/$(PKG_DIR)/bin/setup.sh)
+	(chmod +x $(P_ROOT)/rpmgen.cent6.3.sh)
+
+MAKERPM:
+	$(P_ROOT)/rpmgen.cent6.3.sh -d $(P_BINDIR)/$(PKG_DIR) -i $(INST_PATH) -v $(version) -r $(release) -p $(PKG_NAME) -f $(P_ROOT)/dependency.list
+
+makepkgdir : remvpkgdir
+	@if test ! -d $(P_BINDIR)/$(PKG_DIR);  \
+	then \
+	     mkdir -p $(P_BINDIR)/$(PKG_DIR);  \
+	fi
+	@if test ! -d $(P_BINDIR)/$(PKG_DIR)/bin;  \
+	then \
+	     mkdir -p $(P_BINDIR)/$(PKG_DIR)/bin;  \
+	fi
+
+remvpkgdir  :
+	rm -fr $(P_BINDIR)/$(PKG_DIR)
+	
